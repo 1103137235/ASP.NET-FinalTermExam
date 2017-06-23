@@ -1,0 +1,83 @@
+﻿@model WebApplication3.Models.OrderSearchArg
+@{
+    Layout = null;
+}
+@using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id = "Form1" }))
+{
+    <head>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    </head>
+    <div id="SearchConditionSection" class="container">
+        <table class="table table-bordered">
+            <tr>
+                <td>客戶編號</td>
+                <td>
+                    @Html.TextBoxFor(model => model.CustomerID)
+                </td>
+            </tr>
+            <tr>
+                <td>客戶名稱</td>
+                <td>
+                    @Html.TextBoxFor(model => model.CompanyName)
+                </td>
+            </tr>
+            <tr>
+                <td>聯絡人姓名</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ContactName)
+                </td>
+            </tr>
+            <tr>
+                <td>聯絡人職稱</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ContactTitle)
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="查詢" />
+                    <input type="reset" value="清除" />
+                    <button type="submit" name="Insert" value="Insert">新增訂單</button>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <div id="SearchResultSection">
+
+        @if (ViewBag.SearchResult != null)
+        {
+            <table class="table table-bordered">
+                <tr>
+                    <td>客戶編號</td>
+                    <td>客戶名稱</td>
+                    <td>聯絡人姓名</td>
+                    <td>聯絡人職稱</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @foreach (var item in (List<WebApplication3.Models.Order>)ViewBag.SearchResult)
+                    {
+                    <tr id='@item.CustomerID'>
+                        <td>@item.CustomerID</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.ContactName</td>
+                        <td>@item.ContactTitle</td>
+                        <td>
+                            <button type="submit" name="Update" value="@item.CustomerID">修改</button>
+                        </td>
+                        <td>
+                            <button type="submit" name="Delete" value="@item.CustomerID">刪除</button>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        }
+
+
+    </div>
+}

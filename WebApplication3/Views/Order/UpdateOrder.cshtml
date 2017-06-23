@@ -1,0 +1,119 @@
+﻿@model WebApplication3.Models.Order
+@{
+    Layout = null;
+}
+@using (Html.BeginForm("UpdateOrder", "Order", FormMethod.Post, new { id = "Form1" }))
+{
+    <head>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    </head>
+    <table class="table table-bordered">
+        <tr>
+            <td>訂單編號</td>
+            <td>@Html.TextBoxFor(model => model.OrderID,new { @disabled=true})</td>
+        </tr>
+        <tr>
+            <td>客戶名稱</td>
+            <td>@Html.DropDownListFor(model => model.CustomerID, (List<SelectListItem>)ViewBag.CustomerCodeData,new { @value = Model.CompanyName })</td>
+        </tr>
+        <tr>
+            <td>負責員工名稱</td>
+            <td>@Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmployeeCodeData, new { @value = Model.EmployeeName })</td>
+        </tr>
+        <tr>
+            <td>訂單日期</td>
+            <td>@Html.TextBoxFor(model => model.OrderDate, new { @type = "date",@Value=Model.OrderDate})</td>
+        </tr>
+        <tr>
+            <td>需要日期</td>
+            <td>@Html.TextBoxFor(model => model.RequireDdate, new { @type = "date", @Value = Model.RequireDdate })</td>
+        </tr>
+        <tr>
+            <td>出貨日期</td>
+            <td>@Html.TextBoxFor(model => model.ShippedDate, new { @type = "date", @Value = Model.ShippedDate })</td>
+        </tr>
+        <tr>
+            <td>出貨公司名稱</td>
+            <td>@Html.DropDownListFor(model => model.ShipperID, (List<SelectListItem>)ViewBag.ShipperCodeData, new { @value = Model.ShipperName})</td>
+        </tr>
+        <tr>
+            <td>運費</td>
+            <td>@Html.TextBoxFor(model => model.Freight)</td>
+        </tr>
+        <tr>
+            <td>出貨國家</td>
+            <td>@Html.TextBoxFor(model => model.ShipCountry)</td>
+        </tr>
+        <tr>
+            <td>出貨城市</td>
+            <td>@Html.TextBoxFor(model => model.ShipCity)</td>
+        </tr>
+        <tr>
+            <td>出貨地區</td>
+            <td>@Html.TextBoxFor(model => model.ShipRegion)</td>
+        </tr>
+        <tr>
+            <td>郵遞區號</td>
+            <td>@Html.TextBoxFor(model => model.ShipPostalCode)</td>
+        </tr>
+        <tr>
+            <td>出貨地址</td>
+            <td>@Html.TextBoxFor(model => model.ShipAddress)</td>
+        </tr>
+        <tr>
+            <td>出貨說明</td>
+            <td>@Html.TextBoxFor(model => model.ShipName)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="hidden" name="OrderID" value=@Model.OrderID>
+                <input type="submit" value="存檔" />
+                @Html.ActionLink("回前一頁", "Index")
+            </td>
+
+        </tr>
+    </table>
+    <a id="addNewDetails" href="#">新增一筆</a>
+    <table class="table table-bordered">
+        <tr>
+            <td>商品</td>
+            <td>單價</td>
+            <td>數量</td>
+            <td>取消</td>
+        </tr>
+        <tbody id="tbContent">
+            @for (int i = 0; i < Model.OrderDetails.Count; i++)
+                {
+                <tr>
+                    <td>@Html.DropDownListFor(model => model.OrderDetails[i].ProductID, new SelectList(ViewBag.ProductCodeData, "Value", "Text", Model.OrderDetails[i].ProductID), new { @class = "ProductID" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty" })</td>
+                    <td><button type="button" class="btnRemove">取消</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        <script type="text/javascript">
+        var trtemplate = $('#tbContent tr').eq(0).html();
+
+        $("#addNewDetails").click(function (e) {
+            $('#tbContent').append('<tr>' + trtemplate + '</tr>');
+        });
+
+        $('#tbContent').on('click', '.btnRemove', function () {
+            if ($('#tbContent tr').length > 1)
+                $(this).closest('tr').remove();
+        });
+
+        $('form').submit(function () {
+            for (var i = 0 ; i < $('#tbContent tr').length; i++) {
+                $('.ProductID').eq(i).attr('name', 'OrderDetails[' + i + '].ProductID');
+                $('.Qty').eq(i).attr('name', 'OrderDetails[' + i + '].Qty');
+                $('.UnitPrice').eq(i).attr('name', 'OrderDetails[' + i + '].UnitPrice');
+            }
+        });
+        </script>
+}
